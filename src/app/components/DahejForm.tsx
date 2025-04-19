@@ -3,9 +3,8 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 
-// Function to format the number according to the Indian currency system
 const formatIndianCurrency = (amount: number) => {
-  return amount.toLocaleString('en-IN'); // This uses the Indian locale formatting
+  return amount.toLocaleString('en-IN');
 };
 
 export default function DahejForm() {
@@ -29,10 +28,8 @@ export default function DahejForm() {
     const { salary, assets, pets, govtJobInFamily, education, jobType } = form;
     let dahej = '';
     let totalDahej = 0;
-    let additionalItems = '';
-    let saaliCount = 2; // Default number of saalis
+    let saaliCount = 2;
 
-    // Salary validation if jobless
     if (jobType === 'unemployed' && salary && Number(salary) !== 0) {
       setSalaryError('If you are jobless, your salary must be entered as ₹0.');
       return;
@@ -40,99 +37,80 @@ export default function DahejForm() {
       setSalaryError(null);
     }
 
-    // Base calculation based on salary and assets
     if (salary && Number(salary) > 0) {
-      totalDahej += Number(salary) * 0.1; // 10% of salary as Dahej
+      totalDahej += Number(salary) * 0.1;
     }
 
     if (assets && Number(assets) > 0) {
-      totalDahej += Number(assets) * 10000; // Add ₹10,000 per acre of property
+      totalDahej += Number(assets) * 10000;
     }
 
-    // Add based on pets
     if (pets && Number(pets) > 0) {
-      totalDahej += Number(pets) * 5000; // ₹5,000 per pet
+      totalDahej += Number(pets) * 5000;
     }
 
-    // Check if there&apos;s a government job in the family
     if (govtJobInFamily === 'yes') {
-      totalDahej += 500000; // Add ₹5,00,000 if there is a govt job in the family
-      additionalItems += ' + Government Job in Family';
+      totalDahej += 500000;
     }
 
-    // Determine the impact of education level on Dahej
     if (education === 'phd') {
-      totalDahej += 200000; // Additional ₹20 Lakh for Ph.D holders
-      additionalItems += ' + Ph.D Education';
-      saaliCount += 2; // More saalis for higher education
+      totalDahej += 200000;
+      saaliCount += 2;
     } else if (education === 'masters') {
-      totalDahej += 1000000; // Additional ₹10 Lakh for Master's Degree
-      additionalItems += ' + Master&apos;s Degree';
-      saaliCount += 1; // Increase saali count slightly for Master's
+      totalDahej += 1000000;
+      saaliCount += 1;
     } else if (education === 'bachelors') {
-      totalDahej += 50000; // Additional ₹5 Lakh for Bachelor&apos;s Degree
-      additionalItems += ' + Bachelor&apos;s Degree';
+      totalDahej += 500000;
     }
 
-    // Apply job type modifier (prioritizing government service)
     if (jobType === 'government' || govtJobInFamily === 'yes') {
-      totalDahej += 1000000; // Boost for government job in family or self
-      additionalItems += ' + Government Job';
+      totalDahej += 1000000;
     } else if (jobType === 'business') {
-      totalDahej += 500000; // Business gets a decent boost
-      additionalItems += ' + Business Owner';
+      totalDahej += 500000;
     } else if (jobType === 'private') {
-      totalDahej -= 500000; // Demoralize private sector with a deduction
-      additionalItems += ' - Private Sector Job (Sorry!)';
+      totalDahej -= 500000;
     }
 
-    // Determine the final Dahej output based on totalDahej
+    // Penalize educated but unemployed people
+    if (
+      ['phd', 'masters', 'bachelors'].includes(education) &&
+      jobType === 'unemployed' &&
+      govtJobInFamily === 'no'
+    ) {
+      totalDahej = -600000;
+      dahej = `₹${formatIndianCurrency(totalDahej)}`;
+      setDahejResult(dahej);
+      return;
+    }
+
+    if (
+      ['phd', 'masters', 'bachelors'].includes(education) &&
+      jobType === 'unemployed' &&
+      govtJobInFamily === 'yes'
+    ) {
+      totalDahej = -200000;
+      dahej = `₹${formatIndianCurrency(totalDahej)}`;
+      setDahejResult(dahej);
+      return;
+    }
+
     if (totalDahej >= 4000000) {
-      totalDahej = 3000000; // Reduce total Dahej to a more affordable value
+      totalDahej = 3000000;
       dahej = `₹${formatIndianCurrency(totalDahej)} + 10 Jewellery + 1 SUV Car + Virgin Girl + ${saaliCount} saalis + Abroad Trip + New Flat`;
     } else if (totalDahej >= 3000000) {
-      totalDahej = 2500000; // Reduce total Dahej to a more affordable value
-      dahej = `₹${formatIndianCurrency(totalDahej)} + 1 SUV Car + Virgin Girl + Domestic Trip + Auto Rickshaw + Nano Car`;
+      totalDahej = 2500000;
+      dahej = `₹${formatIndianCurrency(totalDahej)}  + Virgin Girl + Domestic Trip + Cheque + Nano Car`;
     } else if (totalDahej >= 2000000) {
-      totalDahej = 1500000; // Reduce total Dahej to a more affordable value
+      totalDahej = 1500000;
       dahej = `₹${formatIndianCurrency(totalDahej)} + 1 Bike + Non-Virgin Girl + 1 TV + Domestic Trip`;
     } else if (totalDahej >= 1000000) {
-      totalDahej = 800000; // Further reduce for smaller amounts
+      totalDahej = 800000;
       dahej = `₹${formatIndianCurrency(totalDahej)} + 1 Cycle + Cheque + Non-Virgin Girl`;
     } else if (totalDahej >= 25000) {
       dahej = `₹${formatIndianCurrency(totalDahej)} + 2nd hand cycle`;
     } else {
       dahej = `₹${formatIndianCurrency(totalDahej)}`;
     }
-// Salary validation if jobless
-if (jobType === 'unemployed' && salary && Number(salary) !== 0) {
-  setSalaryError('If you are jobless, your salary must be entered as ₹0.');
-  return;
-} else {
-  setSalaryError(null);
-}
-
-// Penalize highly educated but unemployed individuals
-if (
-  (education === 'phd' || education === 'masters' || education === 'bachelors') &&
-  jobType === 'unemployed' && govtJobInFamily === 'no'
-) {
-  totalDahej = 10000; // Super low Dahej
-  dahej = `₹-6,00,000 `;
-  setDahejResult(dahej);
-  return;
-}
-
-if (
-  (education === 'phd' || education === 'masters' || education === 'bachelors') &&
-  jobType === 'unemployed' && govtJobInFamily === 'yes'
-) {
-  totalDahej = 10000; // Super low Dahej
-  dahej = `₹-2,00,000 `;
-  setDahejResult(dahej);
-  return;
-}
-
 
     setDahejResult(dahej);
   };
@@ -161,7 +139,7 @@ if (
               name="education"
               value={form.education}
               onChange={handleChange}
-              className="w-full border border-yellow-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-yellow-500 text-black"
+              className="w-full border border-yellow-300 rounded-lg px-4 py-3 text-black"
               required
             >
               <option value="">Select</option>
@@ -178,7 +156,7 @@ if (
               name="jobType"
               value={form.jobType}
               onChange={handleChange}
-              className="w-full border border-yellow-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-yellow-500 text-black"
+              className="w-full border border-yellow-300 rounded-lg px-4 py-3 text-black"
               required
             >
               <option value="">Select</option>
@@ -196,7 +174,7 @@ if (
               name="salary"
               value={form.salary}
               onChange={handleChange}
-              className="w-full border border-yellow-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-yellow-500 text-black"
+              className="w-full border border-yellow-300 rounded-lg px-4 py-3 text-black"
               required
               min="0"
               disabled={form.jobType === 'unemployed'}
@@ -211,7 +189,7 @@ if (
               name="assets"
               value={form.assets}
               onChange={handleChange}
-              className="w-full border border-yellow-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-yellow-500 text-black"
+              className="w-full border border-yellow-300 rounded-lg px-4 py-3 text-black"
               required
               min="0"
             />
@@ -224,7 +202,7 @@ if (
               name="pets"
               value={form.pets}
               onChange={handleChange}
-              className="w-full border border-yellow-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-yellow-500 text-black"
+              className="w-full border border-yellow-300 rounded-lg px-4 py-3 text-black"
               required
               min="0"
             />
@@ -236,7 +214,7 @@ if (
               name="govtJobInFamily"
               value={form.govtJobInFamily}
               onChange={handleChange}
-              className="w-full border border-yellow-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-yellow-500 text-black"
+              className="w-full border border-yellow-300 rounded-lg px-4 py-3 text-black"
               required
             >
               <option value="">Select</option>
@@ -257,7 +235,7 @@ if (
 
         {dahejResult && (
           <div className="mt-8 text-center text-lg font-semibold text-gray-800">
-            <h3>Your Dahej is:</h3>
+            <h3 className="mb-2">Your Dahej is:</h3>
             <p className="text-2xl text-yellow-700">{dahejResult}</p>
           </div>
         )}
