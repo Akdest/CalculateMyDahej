@@ -133,7 +133,7 @@ export default function DahejForm() {
       dahej = `₹${formatIndianCurrency(totalDahej)} + 10 Jewellery + 1 SUV Car + Virgin Girl + ${saaliCount} saalis + Abroad Trip + New Flat`;
     } else if (totalDahej >= 3000000) {
       totalDahej = 2500000;
-      dahej = `₹${formatIndianCurrency(totalDahej)} + Cheque + Virgin Girl + Domestic Trip + ALto-800`;
+      dahej = `₹${formatIndianCurrency(totalDahej)} + Cheque + Virgin Girl + Domestic Trip + Alto-800`;
     } else if (totalDahej >= 2000000) {
       totalDahej = 1500000;
       dahej = `₹${formatIndianCurrency(totalDahej)} + 1 Bike + Non-Virgin Girl + 1 TV + 1 Fridge`;
