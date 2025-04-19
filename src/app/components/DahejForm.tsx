@@ -143,9 +143,13 @@ export default function DahejForm() {
     } else if (totalDahej >= 25000) {
       dahej = `₹${formatIndianCurrency(totalDahej)} + 2nd hand cycle`;
     } else {
-      dahej = `₹${formatIndianCurrency(totalDahej)}`;
+      const finalAmount = Math.abs(totalDahej);
+      if (totalDahej < 0) {
+        dahej = `₹${formatIndianCurrency(finalAmount)} Dahej to be paid by you.`;
+      } else {
+        dahej = `₹${formatIndianCurrency(finalAmount)}`;
+      }
     }
-
     setDahejResult(dahej);
   };
 
@@ -365,7 +369,7 @@ export default function DahejForm() {
               type="submit"
               className="bg-gradient-to-r from-yellow-500 to-yellow-700 text-white px-6 py-3 rounded-xl font-semibold shadow-md hover:from-yellow-600 hover:to-yellow-800 transition-colors duration-300"
             >
-              Show Me My Dahej 💸
+              Show Me My Dahej 💰
             </button>
           </div>
         </form>
@@ -373,7 +377,7 @@ export default function DahejForm() {
         {/* Result */}
         {dahejResult && (
           <div className="mt-8 text-center text-lg font-semibold text-gray-800">
-            <h3>Your Dahej is:</h3>
+            
             <p className="text-2xl text-yellow-700">{dahejResult}</p>
           </div>
         )}
