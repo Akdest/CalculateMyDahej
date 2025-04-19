@@ -72,8 +72,8 @@ export default function Hero() {
         transition={{ duration: 0.8, ease: 'easeOut' }}
         className="relative z-10 text-center px-6 max-w-6xl"
       >
-        <h1 className="text-gray-900 lg:text-7xl text-4xl md:text-6xl font-extrabold mb-12 lg:mb-16">
-          CalculateMy<span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 to-yellow-700">Dahej</span>
+        <h1 className="text-gray-900 lg:text-7xl text-[28px] md:text-6xl font-extrabold mb-12 lg:mb-16">
+          CalculateMy<span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 to-yellow-700">Dahej.com</span>
         </h1>
        
         <a href='#form' className="text-white bg-gradient-to-r from-yellow-500  to-yellow-700 hover:from-yellow-600 hover:to-yellow-800 transition-colors duration-300 px-6 lg:py-6 py-4 text-lg rounded-xl font-semibold shadow-lg pointer-cursor focus:outline-none ">
